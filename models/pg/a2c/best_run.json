@@ -1,0 +1,5 @@
+{
+  "algorithm": "A2C",
+  "run_name": "a2c_run_08",
+  "mean_reward": 249.029
+}

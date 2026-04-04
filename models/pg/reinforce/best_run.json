@@ -1,0 +1,5 @@
+{
+  "algorithm": "REINFORCE",
+  "run_name": "reinforce_run_08",
+  "mean_reward": 249.029
+}
