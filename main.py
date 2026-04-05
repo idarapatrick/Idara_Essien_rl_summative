@@ -106,7 +106,9 @@ def auto_select_best_algo():
 def run_episode(model, algo: str, env: MicroscopyAMREnv,
                 renderer: MicroscopyRenderer, episode_num: int):
     """Run one episode with the loaded model and live rendering."""
-    obs, info = env.reset(seed=episode_num * 7)
+    import time
+    episode_seed = int(time.time() * 1000) % 100000 + episode_num
+    obs, info = env.reset(seed=episode_seed)
     total_reward = 0.0
     step = 0
     last_action = None
@@ -174,7 +176,7 @@ def main():
     parser.add_argument("--algo", default=None,
                         choices=["dqn", "ppo", "a2c", "reinforce", "random"],
                         help="Algorithm to run (default: auto-select best)")
-    parser.add_argument("--episodes", type=int, default=10,
+    parser.add_argument("--episodes", type=int, default=3,
                         help="Number of episodes to run")
     args = parser.parse_args()
 
