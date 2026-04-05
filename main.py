@@ -1,6 +1,4 @@
 """
-main.py
--------
 Entry point: loads the best-performing trained model and runs a live
 simulation with the pygame visualizer.
 

@@ -1,6 +1,4 @@
 """
-dqn_training.py
----------------
 Trains DQN on the MicroscopyAMREnv using Stable Baselines 3.
 Runs a 10-configuration hyperparameter sweep and saves results.
 
@@ -34,37 +32,37 @@ os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 
-# ── 10 hyperparameter configurations ─────────────────────────────────────────
+# 10 hyperparameter configurations 
 # Vary: learning_rate, buffer_size, gamma, batch_size, target_update_interval
 HYPERPARAMETER_GRID = [
-    # Run 1 — conservative baseline
+    # Run 1 - conservative baseline
     {"learning_rate": 1e-4, "buffer_size": 10_000, "gamma": 0.99,
      "batch_size": 32,  "target_update_interval": 1000, "exploration_fraction": 0.15},
-    # Run 2 — higher LR
+    # Run 2 - higher LR
     {"learning_rate": 5e-4, "buffer_size": 10_000, "gamma": 0.99,
      "batch_size": 32,  "target_update_interval": 1000, "exploration_fraction": 0.15},
-    # Run 3 — large buffer
+    # Run 3 - large buffer
     {"learning_rate": 1e-4, "buffer_size": 50_000, "gamma": 0.99,
      "batch_size": 64,  "target_update_interval": 500,  "exploration_fraction": 0.20},
-    # Run 4 — low gamma (myopic)
+    # Run 4 - low gamma (myopic)
     {"learning_rate": 1e-4, "buffer_size": 10_000, "gamma": 0.90,
      "batch_size": 32,  "target_update_interval": 1000, "exploration_fraction": 0.15},
-    # Run 5 — high gamma (far-sighted)
+    # Run 5 - high gamma (far-sighted)
     {"learning_rate": 1e-4, "buffer_size": 10_000, "gamma": 0.999,
      "batch_size": 64,  "target_update_interval": 500,  "exploration_fraction": 0.10},
-    # Run 6 — large batch
+    # Run 6 - large batch
     {"learning_rate": 3e-4, "buffer_size": 50_000, "gamma": 0.99,
      "batch_size": 128, "target_update_interval": 500,  "exploration_fraction": 0.20},
-    # Run 7 — aggressive exploration
+    # Run 7 - aggressive exploration
     {"learning_rate": 1e-4, "buffer_size": 20_000, "gamma": 0.95,
      "batch_size": 32,  "target_update_interval": 1000, "exploration_fraction": 0.40},
-    # Run 8 — fast target update
+    # Run 8 - fast target update
     {"learning_rate": 5e-4, "buffer_size": 20_000, "gamma": 0.99,
      "batch_size": 64,  "target_update_interval": 250,  "exploration_fraction": 0.15},
-    # Run 9 — high LR + large buffer
+    # Run 9 - high LR + large buffer
     {"learning_rate": 1e-3, "buffer_size": 50_000, "gamma": 0.99,
      "batch_size": 128, "target_update_interval": 1000, "exploration_fraction": 0.20},
-    # Run 10 — balanced, tuned
+    # Run 10 - balanced, tuned
     {"learning_rate": 3e-4, "buffer_size": 30_000, "gamma": 0.97,
      "batch_size": 64,  "target_update_interval": 750,  "exploration_fraction": 0.12},
 ]
@@ -188,7 +186,6 @@ def run_sweep():
     summary = summary.sort_values("mean_reward", ascending=False)
     summary.to_csv(os.path.join(RESULTS_DIR, "dqn_results_summary.csv"), index=False)
 
-    print("\n" + "="*60)
     print("DQN SWEEP COMPLETE")
     print(summary[["run_name","learning_rate","gamma","batch_size","mean_reward","std_reward"]].to_string())
     print(f"\nBest run: {summary.iloc[0]['run_name']}  "

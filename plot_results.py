@@ -3,12 +3,12 @@ Generates all figures needed for the report from saved training results.
 Run this AFTER all four algorithms have finished training.
 
 Produces:
-  results/figures/01_cumulative_reward_curves.png   — all 4 algorithms subplots
-  results/figures/02_dqn_loss_curve.png             — DQN TD loss over training
-  results/figures/03_pg_entropy_curves.png          — PPO / A2C / REINFORCE entropy
-  results/figures/04_convergence_comparison.png     — final mean reward bar chart
-  results/figures/05_hyperparameter_sensitivity.png — LR vs reward scatter per algo
-  results/figures/06_budget_vs_detections.png       — compute efficiency analysis
+  results/figures/01_cumulative_reward_curves.png   - all 4 algorithms subplots
+  results/figures/02_dqn_loss_curve.png             - DQN TD loss over training
+  results/figures/03_pg_entropy_curves.png          - PPO / A2C / REINFORCE entropy
+  results/figures/04_convergence_comparison.png     - final mean reward bar chart
+  results/figures/05_hyperparameter_sensitivity.png - LR vs reward scatter per algo
+  results/figures/06_budget_vs_detections.png       - compute efficiency analysis
 
 Run:
     python plot_results.py
@@ -117,11 +117,11 @@ def load_best_run_name(model_dir: str) -> str:
     return ""
 
 
-# Figure 1: Cumulative reward curves — all 4 algorithms ────────────────────
+# Figure 1: Cumulative reward curves - all 4 algorithms
 
 def plot_reward_curves():
     fig, axes = plt.subplots(2, 2, figsize=(14, 9))
-    fig.suptitle("Learning curves — cumulative reward per evaluation checkpoint",
+    fig.suptitle("Learning curves - cumulative reward per evaluation checkpoint",
                  fontsize=14, y=1.01)
 
     for ax, (algo, (results_dir, model_dir)) in zip(axes.flat, ALGO_DIRS.items()):

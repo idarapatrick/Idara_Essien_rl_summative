@@ -1,8 +1,6 @@
 """
-demo_random_agent.py
---------------------
 Demonstrates the environment visualization with a RANDOM agent.
-No model is loaded — the agent takes random actions every step.
+No model is loaded - the agent takes random actions every step.
 This satisfies the assignment requirement:
   "Create a static file that shows the agent taking random actions
    (not using a model) in the custom environment."
@@ -28,8 +26,8 @@ from environment.data_simulator import CLASS_NAMES
 
 def run_random_demo(max_frames: int = 500, headless: bool = False):
     print("=" * 60)
-    print("  AMR Microscopy RL — Random Agent Demo")
-    print("  No trained model — purely random action selection")
+    print("  AMR Microscopy RL - Random Agent Demo")
+    print("  No trained model - purely random action selection")
     print("=" * 60)
 
     env = MicroscopyAMREnv(render_mode=None, seed=42)
@@ -59,7 +57,7 @@ def run_random_demo(max_frames: int = 500, headless: bool = False):
                     print("Window closed by user.")
                     return
 
-            # Random action — no model involved
+            # Random action - no model involved
             action = env.action_space.sample()
             action_counts[action] += 1
 
@@ -119,8 +117,7 @@ def run_random_demo(max_frames: int = 500, headless: bool = False):
         pygame.image.save(renderer.screen, "results/demo_random_agent_screenshot.png")
         print("Screenshot saved to results/demo_random_agent_screenshot.png")
 
-    print("\n" + "=" * 60)
-    print(f"  Random agent summary — {step} frames")
+    print(f"  Random agent summary - {step} frames")
     print(f"  Total reward    : {total_reward:.2f}")
     print(f"  Detections      : {info['episode_detections']}")
     print(f"  Misses          : {info['episode_misses']}")
@@ -128,9 +125,9 @@ def run_random_demo(max_frames: int = 500, headless: bool = False):
     print(f"  Budget remaining: {info['compute_budget']:.1f}%")
     print("\n  Action distribution:")
     for a, count in action_counts.items():
-        bar = "█" * (count // 5)
+        bar = "#" * (count // 5)
         print(f"    {ACTION_NAMES[a]:<22}: {count:>4}  {bar}")
-    print("=" * 60)
+  
 
     # Keep window open until user closes it manually
     if not headless:

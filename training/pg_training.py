@@ -1,10 +1,8 @@
 """
-pg_training.py
---------------
 Trains three Policy Gradient algorithms on MicroscopyAMREnv:
   - PPO  (Stable Baselines 3)
   - A2C  (Stable Baselines 3)
-  - REINFORCE (custom implementation — not from SB3)
+  - REINFORCE (custom implementation - not from SB3)
 
 Each algorithm runs a 10-configuration hyperparameter sweep.
 
@@ -45,9 +43,7 @@ for d in ["results/ppo", "results/a2c", "results/reinforce",
     os.makedirs(d, exist_ok=True)
 
 
-# ═════════════════════════════════════════════════════════════════════════════
 # PPO — 10 hyperparameter configurations
-# ═════════════════════════════════════════════════════════════════════════════
 
 PPO_GRID = [
     # Run 1 — SB3 default-like
@@ -82,9 +78,8 @@ PPO_GRID = [
      "gamma": 0.97, "gae_lambda": 0.95, "clip_range": 0.2, "ent_coef": 0.005},
 ]
 
-# ═════════════════════════════════════════════════════════════════════════════
+
 # A2C — 10 hyperparameter configurations
-# ═════════════════════════════════════════════════════════════════════════════
 
 A2C_GRID = [
     {"learning_rate": 7e-4, "n_steps": 5,  "gamma": 0.99, "gae_lambda": 1.0,  "ent_coef": 0.0},
@@ -99,9 +94,7 @@ A2C_GRID = [
     {"learning_rate": 7e-4, "n_steps": 10, "gamma": 0.97, "gae_lambda": 0.95, "ent_coef": 0.005},
 ]
 
-# ═════════════════════════════════════════════════════════════════════════════
 # REINFORCE — custom implementation
-# ═════════════════════════════════════════════════════════════════════════════
 
 REINFORCE_GRID = [
     {"learning_rate": 1e-3, "gamma": 0.99, "entropy_coef": 0.0,  "hidden_size": 64},
@@ -117,9 +110,7 @@ REINFORCE_GRID = [
 ]
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # Custom REINFORCE policy network and training loop
-# ─────────────────────────────────────────────────────────────────────────────
 
 class PolicyNetwork(nn.Module):
     """Simple MLP policy for REINFORCE."""
@@ -183,7 +174,7 @@ def train_reinforce(hyperparams: dict, run_id: int) -> dict:
     t0 = time.time()
 
     while total_steps < TOTAL_TIMESTEPS:
-        # ── Collect one episode ───────────────────────────────────────────
+        # Collect one episode 
         obs, _ = env.reset()
         log_probs, entropies, rewards = [], [], []
         ep_reward = 0.0
@@ -201,7 +192,7 @@ def train_reinforce(hyperparams: dict, run_id: int) -> dict:
 
         episode_rewards.append(ep_reward)
 
-        # ── REINFORCE update ──────────────────────────────────────────────
+        # REINFORCE update
         returns   = compute_returns(rewards, gamma)
         log_probs = torch.stack(log_probs)
         entropies = torch.stack(entropies)
@@ -292,16 +283,15 @@ def train_sb3_algo(AlgoClass, grid: list, algo_name: str):
     for i, hp in enumerate(grid):
         run_name = f"{algo_name.lower()}_run_{i+1:02d}"
 
-        # ── Resume check ──────────────────────────────────────────────────
+        # Resume check
         final_model_path = os.path.join(model_dir, run_name, "final_model.zip")
         if run_name in completed_names or os.path.exists(final_model_path):
-            print(f"\n  SKIPPING {run_name} — already completed.")
+            print(f"\n  SKIPPING {run_name} - already completed.")
             continue
 
-        print(f"\n{'='*60}")
         print(f"  {algo_name} {run_name}")
         print(f"  {hp}")
-        print(f"{'='*60}")
+
 
         env      = Monitor(MicroscopyAMREnv(seed=i + 1))
         eval_env = Monitor(MicroscopyAMREnv(seed=i + 101))
@@ -373,7 +363,7 @@ def train_sb3_algo(AlgoClass, grid: list, algo_name: str):
             "std_reward":      round(std_reward, 3),
             "training_time_s": round(elapsed, 1),
         })
-        # Save immediately — survives power loss
+        # Save immediately - survives power loss
         run_result_dir = os.path.join(results_dir, run_name)
         os.makedirs(run_result_dir, exist_ok=True)
         with open(os.path.join(run_result_dir, "run_result.json"), "w") as f:
@@ -385,7 +375,7 @@ def train_sb3_algo(AlgoClass, grid: list, algo_name: str):
         env.close()
         eval_env.close()
 
-    # Rebuild from disk — picks up any runs completed before a crash
+    # Rebuild from disk - picks up any runs completed before a crash
     all_results = _load_completed_results(results_dir, algo_name)
     if not all_results:
         print(f"\n{algo_name}: no completed runs found yet.")
@@ -411,7 +401,7 @@ def run_reinforce_sweep():
         done_path  = os.path.join("results/reinforce", run_name, "run_result.json")
         model_path = os.path.join("models/pg/reinforce", run_name, "policy.pt")
         if os.path.exists(done_path) or os.path.exists(model_path):
-            print(f"\n  SKIPPING {run_name} — already completed.")
+            print(f"\n  SKIPPING {run_name} - already completed.")
             if os.path.exists(done_path):
                 with open(done_path) as f:
                     all_results.append(json.load(f))
