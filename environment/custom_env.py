@@ -1,6 +1,4 @@
 """
-custom_env.py
--------------
 Custom Gymnasium environment: AMR Microscopy Adaptive Analysis.
 
 The RL agent controls a microscopy analysis pipeline monitoring E. coli cultures
@@ -24,8 +22,8 @@ from typing import Optional, Tuple, Dict, Any
 from environment.data_simulator import AMRDataSimulator, FEATURE_NAMES
 
 
-# ── Action definitions ────────────────────────────────────────────────────────
-ACTION_SKIP             = 0   # No processing — saves budget
+# Action definitions 
+ACTION_SKIP             = 0   # No processing, saves budget
 ACTION_QUICK_SCAN       = 1   # Density + motility check only (low cost)
 ACTION_MORPHO_ANALYSIS  = 2   # Full morphological feature extraction (medium cost)
 ACTION_DEEP_ANALYSIS    = 3   # Morphology + anomaly pipeline (high cost)
@@ -110,10 +108,10 @@ class MicroscopyAMREnv(gym.Env):
             dtype=np.float32,
         )
 
-        # Internal simulator — generates episode data
+        # Internal simulator, generates episode data
         self._simulator = AMRDataSimulator(seed=seed, total_frames=total_frames)
 
-        # Episode state — initialised in reset()
+        # Episode state, initialised in reset()
         self._episode_data = None
         self._current_frame = 0
         self._compute_budget = 100.0
@@ -129,7 +127,7 @@ class MicroscopyAMREnv(gym.Env):
         # Rendering
         self._renderer = None
 
-    # ── Core Gymnasium API ────────────────────────────────────────────────────
+    # Core Gymnasium API 
 
     def reset(
         self,
@@ -250,14 +248,14 @@ class MicroscopyAMREnv(gym.Env):
             self._renderer.close()
             self._renderer = None
 
-    # ── Reward calculation ────────────────────────────────────────────────────
+    # Reward calculation 
 
     def _calculate_reward(self, action: int, is_resistance: bool) -> float:
         reward = 0.0
         frame = self._current_frame
         current_anomaly = self._compute_anomaly_score(frame)
 
-        # 1. Detection reward — catch resistance events
+        # Detection reward — catch resistance events
         if is_resistance:
             if action in DETECTION_ACTIONS:
                 # Scale reward by action depth: deeper analysis = more confident detection
@@ -269,42 +267,42 @@ class MicroscopyAMREnv(gym.Env):
                 reward += depth_bonus[action]
                 reward += current_anomaly * 3.0   # bonus for catching high-severity events
             else:
-                # Missed a resistance event — penalty scales with severity
+                # Missed a resistance event (penalty scales with severity)
                 base_penalty = -15.0
                 severity_scale = 1.0 + current_anomaly
                 reward += base_penalty * severity_scale
 
-        # 2. Computational efficiency — penalise expensive actions
+        # Computational efficiency (penalise expensive actions)
         cost_penalty = COMPUTE_COST[action] * 0.5
         reward -= cost_penalty
 
-        # 3. False alarm penalty
+        # False alarm penalty
         if action == ACTION_ALERT_AND_DEEP and not is_resistance:
             reward -= 5.0
 
-        # 4. Budget guard — penalise expensive actions when budget is low
+        # Budget guard (penalise expensive actions when budget is low)
         if self._compute_budget < 10.0 and action in {
             ACTION_DEEP_ANALYSIS, ACTION_ALERT_AND_DEEP, ACTION_TEMPORAL_COMPARE
         }:
             reward -= 1.5
 
-        # 5. Temporal efficiency bonus — reward catching events after a quiet period
+        # Temporal efficiency bonus (reward catching events after a quiet period)
         if action in DETECTION_ACTIONS and is_resistance:
             if self._frames_since_last_alert > 50:
                 reward += 2.0
 
-        # 6. Smart skip reward — reward skipping genuinely quiet frames
+        # Smart skip reward (reward skipping genuinely quiet frames)
         if action == ACTION_SKIP and not is_resistance and current_anomaly < 0.15:
             reward += 0.5
 
-        # 7. Incremental quality bonus for analysis actions
+        # Incremental quality bonus for analysis actions
         if action in ANALYSIS_ACTIONS:
             quality = self._estimate_detection_confidence(action, frame)
             reward += quality * 1.5
 
         return float(reward)
 
-    # ── Termination ───────────────────────────────────────────────────────────
+    # Termination 
 
     def _is_terminated(self) -> bool:
         if self._current_frame >= self.total_frames:
@@ -315,7 +313,7 @@ class MicroscopyAMREnv(gym.Env):
             return True
         return False
 
-    # ── Observation construction ──────────────────────────────────────────────
+    # Observation construction
 
     def _get_observation(self) -> np.ndarray:
         """Build flat float32 observation vector of length OBS_DIM=22."""
@@ -385,7 +383,7 @@ class MicroscopyAMREnv(gym.Env):
             if self._episode_data else None,
         }
 
-    # ── Properties for external access ───────────────────────────────────────
+    # Properties for external access
 
     @property
     def current_frame(self) -> int:

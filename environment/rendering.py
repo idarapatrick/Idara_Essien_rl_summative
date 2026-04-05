@@ -1,6 +1,4 @@
 """
-rendering.py
-------------
 Pygame-based visualisation for the AMR Microscopy RL environment.
 Displays: simulated microscopy view, agent decision panel,
 resource gauges, anomaly timeline, and episode statistics.
@@ -17,7 +15,7 @@ from environment.data_simulator import (
 from environment.custom_env import ACTION_NAMES, COMPUTE_COST
 
 
-# ── Colour palette ────────────────────────────────────────────────────────────
+# Colour palette
 BG_DARK       = (18,  22,  36)
 BG_PANEL      = (28,  34,  52)
 BG_PANEL2     = (36,  44,  64)
@@ -87,7 +85,7 @@ class MicroscopyRenderer:
         self.font_sm  = pygame.font.SysFont("monospace", 11)
         self.font_xs  = pygame.font.SysFont("monospace", 10)
 
-    # ── Public API ────────────────────────────────────────────────────────────
+    # Public API
 
     def render(
         self,
@@ -120,7 +118,7 @@ class MicroscopyRenderer:
 
         self.screen.fill(BG_DARK)
 
-        # ── Layout regions ────────────────────────────────────────────────────
+        # Layout regions
         # Left panel: microscopy simulation (0, 0, 520, 520)
         # Right panel: agent info (540, 0, 720, 520)
         # Bottom strip: timeline (0, 540, 1280, 240)
@@ -143,7 +141,7 @@ class MicroscopyRenderer:
     def close(self):
         pygame.quit()
 
-    # ── Sub-panels ────────────────────────────────────────────────────────────
+    # Sub-panels
 
     def _draw_microscopy_panel(self, frame, obs, episode_data, rect):
         """Simulated microscopy view: animated bacteria representation."""
@@ -374,7 +372,7 @@ class MicroscopyRenderer:
             self._text(label, lx + 14, rect.bottom - 16, self.font_xs, TEXT_MUTED)
             lx += 90
 
-    # ── Utility ───────────────────────────────────────────────────────────────
+    # Utility
 
     def _text(self, msg, x, y, font, colour):
         surf = font.render(str(msg), True, colour)

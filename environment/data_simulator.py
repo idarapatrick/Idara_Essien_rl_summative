@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from typing import List, Tuple, Optional
 
 
-# ── Antibiotic class identifiers ──────────────────────────────────────────────
+# Antibiotic class identifiers
 CONTROL    = 0
 DNA_DAMAGE = 1   # Ciprofloxacin, Nalidixate — causes filamentation via SOS
 CELL_WALL  = 2   # Mecillinam, MP265 — causes cell bloating / rounding
@@ -35,7 +35,7 @@ CLASS_NAMES = {
     MEMBRANE:   "Membrane (Rifampicin/CAM)",
 }
 
-# ── Per-class morphological parameter distributions ───────────────────────────
+# Per-class morphological parameter distributions
 # Values derived from DeepBacs dataset statistics and cited literature.
 # Format: (baseline_mean, baseline_std, stressed_mean, stressed_std)
 # "stressed" = values observed in antibiotic-treated populations.
