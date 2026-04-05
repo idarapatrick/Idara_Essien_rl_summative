@@ -12,6 +12,11 @@ The agent must decide how much analysis to run at each frame under a limited com
 
 The environment is implemented as a custom Gymnasium environment with biologically motivated features and action costs.
 
+## Dataset used for Calibration
+
+DeepBcs Dataset:
+https://github.com/HenriquesLab/DeepBacs.git
+
 ## Implemented Algorithms
 
 - DQN (Stable Baselines3)
