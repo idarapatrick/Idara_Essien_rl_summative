@@ -1,9 +1,6 @@
 """
 Demonstrates the environment visualization with a RANDOM agent.
-No model is loaded - the agent takes random actions every step.
-This satisfies the assignment requirement:
-  "Create a static file that shows the agent taking random actions
-   (not using a model) in the custom environment."
+No model is loaded, and the agent takes random actions every step.
 
 Run:
     python demo_random_agent.py
