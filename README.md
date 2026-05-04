@@ -71,8 +71,8 @@ requirements.txt
 ### 1. Clone and enter project
 
 ```bash
-git clone https://github.com/idarapatrick/Idara_Essien_rl_summative.git
-cd Idara_Essien_rl_summative
+git https://github.com/idarapatrick/RL-for-Antimicrobial-Resistance.git
+cd RL-for-Antimicrobial-Resistance
 ```
 
 ### 2. Create a Python environment
